@@ -131,3 +131,38 @@ const allUsers = [{
 
 // console.log(calculateArithmetic(5, 2, "sub"))
 
+// function calculateArithmetic(a, b, arithmeticFinalFunction)  {
+//     const ans = arithmeticFinalFunction(a, b)
+//     return ans
+// }
+// function sum(a, b) {
+//     return a + b
+// }
+// const value = calculateArithmetic(1, 3, sum)
+// console.log(value)
+
+function greet() {
+    console.log("Hello world!")
+}
+// setTimeout(greet, 1000)
+// setInterval(greet, 2000)
+
+const user = {
+    name: "Satyajit",
+    age: 23,
+    address: {
+        houseNumber: "11",
+        street: 1
+    }
+}
+
+// console.log(user["address"]["houseNumber"])
+const address = user["address"]
+// console.log(address["houseNumber"])
+
+// for(let i = 30;  i >= 0; i--) {
+//     console.log(i)
+// }
+
+
+console.log(Date.now())
