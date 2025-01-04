@@ -32,3 +32,5 @@ const sumOfSomething = (a, b, fn) => {
 }
 
 console.log(sumOfSomething(1, 2, sum))
+
+//Async 
