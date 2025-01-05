@@ -33,3 +33,16 @@ const onDone = (data) => {
 };
 
 satyajitsReadFile().then(onDone);
+
+
+// code that could lead to callback hell 
+
+const myOwnSetTimeout = (fn, duration) => {
+  setTimeout(fn, duration)
+}
+
+myOwnSetTimeout(() => {
+  console.log("Hi there")
+}, 1000)
+
+
