@@ -35,3 +35,10 @@ const asyncMain = async () => {
 }
 
 asyncMain()
+
+
+// 99% of times we should do synchronous call while
+// do a network call
+// sleep/wait for some time
+// read a file
+// database call
