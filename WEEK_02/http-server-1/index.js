@@ -31,3 +31,18 @@ app.post('/conversations', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on ${port}`)
 })
+
+// what is fs?
+// fs is a library that gives you high level constructs to do filesystm stuff (read from a file, write to a file...)
+
+// what is express?
+// express is a library that gives you a high level constructs to create http servers
+
+class NewClass {
+  constructor () {
+
+  }
+}
+
+const obj = new NewClass()
+console.log(typeof obj)
