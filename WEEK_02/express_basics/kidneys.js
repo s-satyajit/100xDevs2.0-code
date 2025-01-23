@@ -40,3 +40,25 @@ app.post("/", (req, res) => {
     msg: "Done!",
   });
 });
+
+app.put("/", (req, res) => {
+  for(let i = 0; i < users[0].kidneys.length; i++) {
+    users[0].kidneys.healthy = true;
+  }
+  res.json({})
+})
+
+
+// removing all the unhealthy kidneys
+app.delete("/", (req, res) => {
+  let newKidneys = []
+  for(let i = 0; i < users[0].kidneys.length; i++) {
+    if(users[0].kidneys[i].healthy) {
+      newKidneys.push({
+        healthy: true
+      })
+    }
+  }
+  users[0].kidneys = newKidneys;
+  res.json({msg: "done"})
+})
