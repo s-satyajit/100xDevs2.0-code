@@ -54,6 +54,15 @@ console.log(filterNames)
 // Assignment
 // Create a map fn that takes an array and a transform fn as an input and returns the transformed array as an output
 
+const exArr = [1, 2, 3, 4, 5, 6, 7]
+
+const exNewArr = []
+
+for(let i = 0; i < exArr.length; i++) {
+    exNewArr.push(exNewArr[i] * 2)
+}
+
+console.log(exNewArr)
 
 
 
