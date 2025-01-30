@@ -35,12 +35,6 @@ const app = express()
 
 // ------------------------------------------  we can also write
 
-const userValidator = (username, password) => {
-    if(username != "satyajit" && password != "pass") {
-        return false;
-    }
-    return true;
-}
 
 const kidneyValidator = (kidney) => {
     if(kidney != 1 && kidney != 2) {
@@ -49,8 +43,18 @@ const kidneyValidator = (kidney) => {
     return true
 }
 
+const userValidator = (username, password) => {
+    if(username != "satyajit" && password != "pass") {
+        return false;
+    }
+    return true;
+}
+
 app.get("/health-checkup", (req, res) => {
-    if(userValidator(req.header.username)) {
+
+    const {username, password} = req.headers;
+
+    if(!userValidator(username, password)) {
         res.status(403).json({
             "msg": "User doesn't exist"
         })
