@@ -1,12 +1,19 @@
-import express from "express"
-const app = express()
+import express from "express";
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
-app.post("/health-checkup", (req, res) => {
-    const kidneys = req.body.kidneys
-    const kidneyLength = kidneys.length
-    console.log(`Your kidney length is ${kidneyLength}`)
-})
+app.post("/health-check", (req, res) => {
+  const kidneys = req.body.kidneys;
 
-app.listen(3000)
+  if (!kidneys) {
+    res.json({
+      msg: "Wrong inputs",
+    });
+  } else {
+    const kidneyLength = kidneys.length;
+    res.send(`You have ${kidneyLength} kidneys.`);
+  }
+});
+
+app.listen(3000);
