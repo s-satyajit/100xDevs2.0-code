@@ -12,7 +12,7 @@ const validateInput = (obj) => {
 
 validateInput({email: "satyajit@gmail.com", password: "12345678"})
 
-// ------------------Coerciosn
+// ------------------Coersion
 
 // import {z} from "zod"
 
