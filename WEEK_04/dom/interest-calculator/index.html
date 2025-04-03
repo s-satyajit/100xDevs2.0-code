@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Calculator</title>
+</head>
+<body>
+    <input>
+        <input id="principal" type="text"></input>
+        <input id="rate" type="text"></input>
+        <input id="time"></input>
+    </form>
+    <button onClick="populateDiv()">Calculate Interest</button>
+    <div id="finalResult">Show Interest</div>
+
+    <script>
+        const populateDiv = async () => {
+            const principal = document.getElementById('principal').value
+            const rate = document.getElementById('rate').value
+            const time = document.getElementById('time').value
+
+            try {
+                const response = await fetch(`http://localhost:8080/interest?principal=${principal}&rate=${rate}&time=${time}`)
+                const result = await response.text()
+                const finalResult = document.getElementById('finalResult')
+                finalResult.innerHTML = result
+            } catch(e) {
+                console.error(e)
+            }
+        }
+    </script>
+</body>
+</html>
