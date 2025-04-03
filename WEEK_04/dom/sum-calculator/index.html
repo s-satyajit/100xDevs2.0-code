@@ -7,12 +7,20 @@
 </head>
 <body>
     <form>
-        <input id="num1" type="text" placeholder="number 1"></input> </br></br>
-        <input id="num2" type="text" placeholder="number 2"></input> </br></br>
-        <button type="button" onclick="populateDiv()">Calculate Sum</button>
+        <input id="num1" oninput="debouncingDiv()" type="text" placeholder="number 1"></input> </br></br>
+        <input id="num2" oninput="debouncingDiv()" type="text" placeholder="number 2"></input> </br></br>
+        <!-- <button type="button" onclick="populateDiv()">Calculate Sum</button> -->
         <div id="finalSum"></div>
     </form>
     <script>
+        let timeout;
+        const debouncingDiv = () => {
+            clearTimeout(timeout)
+            timeout = setTimeout(() => {
+                populateDiv()
+            }, 2000)
+        }
+
         const populateDiv = async () => {
             const num1 = document.getElementById('num1').value
             const num2 = document.getElementById('num2').value

@@ -7,14 +7,22 @@
 </head>
 <body>
     <input>
-        <input id="principal" type="text"></input>
-        <input id="rate" type="text"></input>
-        <input id="time"></input>
+        <input oninput="debouncingDiv()" id="principal" type="text"></input>
+        <input oninput="debouncingDiv()" id="rate" type="text"></input>
+        <input oninput="debouncingDiv()" id="time"></input>
     </form>
-    <button onClick="populateDiv()">Calculate Interest</button>
+    <!-- <button onClick="populateDiv()">Calculate Interest</button> -->
     <div id="finalResult">Show Interest</div>
 
     <script>
+        let timeout;
+        const debouncingDiv = () => {
+            clearTimeout(timeout)
+            setTimeout(() => {
+                populateDiv()
+            }, 2000)
+        }
+
         const populateDiv = async () => {
             const principal = document.getElementById('principal').value
             const rate = document.getElementById('rate').value
