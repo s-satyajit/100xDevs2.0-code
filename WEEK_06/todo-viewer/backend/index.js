@@ -12,12 +12,19 @@ const TODOS = [
   { id: 5, title: "Fresh mind", description: "Fresh mind from 9-10" },
 ];
 
-app.use("/todo/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const todo = TODOS.find((t) => t.id === id);
-  if (!todo) res.status(404).json({ msg: `Todo not found` });
-  res.json(todo);
-});
+// app.use("/todo/:id", (req, res) => {
+//   const id = Number(req.params.id);
+//   const todo = TODOS.find((t) => t.id === id);
+//   if (!todo) res.status(404).json({ msg: `Todo not found` });
+//   res.json(todo);
+// });
+
+app.use("/todo", (req, res) => {
+  const id = parseInt(req.query.id)
+  const todo = TODOS.find((t) => t.id === id)
+  if(!todo) res.status(404).json({msg: `Todo not found`})
+  res.json(todo)
+})
 
 app.listen(8080, () => {
   console.log(`Server running on 8080`);

@@ -8,7 +8,7 @@ export const Todos = () => {
         "method": "GET",
     })
         .then((res) => res.json())
-        .then((data) => setTodos(data.todos))
+        .then((data) => setTodos(data))
 
     return (
         <>
