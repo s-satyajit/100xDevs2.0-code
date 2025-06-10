@@ -19,7 +19,7 @@ router.post("/signup", async (req, res) => {
   }
   const { username, firstname, lastname, password } = signupResult.data;
   try {
-    const existing = await User.findOne({username});
+    const existing = await User.findOne({ username });
     if (existing) {
       return res.status(409).json({ msg: `Username already taken` });
     }
@@ -34,7 +34,7 @@ router.post("/signup", async (req, res) => {
 
     const account = await Account.create({
       userId: newUser._id,
-      balance: Math.floor(1+ Math.random() * 10000),
+      balance: Math.floor(1 + Math.random() * 10000),
     });
 
     const token = JWT.sign(
@@ -53,8 +53,10 @@ router.post("/signup", async (req, res) => {
         lastname: newUser.lastname,
       },
       account: {
-        balance: account.balance
-      }
+        id: account._id,
+        userId: account.userId,
+        balance: account.balance,
+      },
     });
   } catch (err) {
     console.error(err);
@@ -79,6 +81,10 @@ router.post("/signin", async (req, res) => {
     const isMatch = await user.validatePassword(password);
     if (!isMatch) return res.status(300).json({ msg: `Invalid password` });
 
+    const account = await Account.findOne({
+      userId: user._id,
+    });
+
     const token = JWT.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
@@ -93,14 +99,18 @@ router.post("/signin", async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
       },
+      account: {
+        id: account._id,
+        balance: account.balance,
+      }
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: `Internal server error` });
+    res.status(500).json({ message: `Internal server error, ${err.message}` });
   }
 });
 
-router.put("update-info", authMiddleware, async (req, res) => {
+router.put("/update-info", authMiddleware, async (req, res) => {
   const infoResult = updateSchema.safeParse(req.body);
   if (!infoResult.success) {
     res.status(400).json({
@@ -111,7 +121,7 @@ router.put("update-info", authMiddleware, async (req, res) => {
   const { username, firstname, lastname, password } = infoResult.data;
 
   try {
-    const user = await User.findBy(req.userId);
+    const user = await User.findById(req.userId);
     if (!user) {
       res.status(404).json({ msg: `User not found` });
     }
@@ -122,10 +132,18 @@ router.put("update-info", authMiddleware, async (req, res) => {
     password !== undefined &&
       (user.password_hash = await user.createHash(password));
     await user.save();
-    return res.status(200).json({ msg: `User updated successfully!` });
+    return res
+      .status(200)
+      .json({
+        msg: `User updated successfully!`,
+        username,
+        firstname,
+        lastname,
+        password: user.password_hash
+      });
   } catch (err) {
     console.error(`Error updating user ${err}`);
-    res.status(500).json({ msg: `Internal server error` });
+    res.status(500).json({ msg: `Internal server error, ${err.message}` });
   }
 });
 

@@ -49,7 +49,7 @@ UserSchema.methods.createHash = async (plainTextPassword) => {
   return await bcrypt.hash(plainTextPassword, salt);
 };
 
-UserSchema.methods.validatePassword = async (candidatePassword) => {
+UserSchema.methods.validatePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password_hash);
 };
 

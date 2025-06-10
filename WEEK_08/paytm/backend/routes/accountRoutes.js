@@ -1,21 +1,29 @@
 import express from "express";
+import mongoose from "mongoose";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { Account, User } from "../models/userModel.js";
+import { Account } from "../models/userModel.js";
 const router = express.Router();
 
 router.get("/balance", authMiddleware, async (req, res) => {
   const { userId } = req.body;
-  const account = await Account.findOne({
-    userId,
-  });
-  res.json({
-    balance: account.balance,
-  });
+  try {
+    const account = await Account.findOne({
+      userId,
+    });
+    if (!account) return res.status(404).json({ msg: `Account not found` });
+    res.json({
+      balance: account.balance,
+    });
+  } catch (err) {
+    console.log("Error fetching balance", err);
+    res.status(500).json({ error: `Internal server error ${err.message}` });
+  }
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
-
+  session.startTransaction();
+  
   try {
     const { from, amount, to } = req.body;
 
@@ -42,12 +50,12 @@ router.post("/transfer", authMiddleware, async (req, res) => {
       { session }
     );
 
-    await session.commitTransation();
-    res.status(200).json({ msg: `Transaction successfult!` });
+    await session.commitTransaction();
+    res.status(200).json({ msg: `Transaction successful!` });
   } catch (err) {
     await session.abortTransaction();
     console.error("Transaction failed", err);
-    res.status(500).json({ msg: `Internal server error` });
+    res.status(500).json({ msg: `Internal server error, ${err.message}` });
   } finally {
     await session.endSession();
   }
