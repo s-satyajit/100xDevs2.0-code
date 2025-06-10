@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 
 const UserSchema = new Schema({
@@ -34,26 +34,26 @@ const AccountSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   balance: {
     type: Number,
     required: true,
-    default: 0
-  }
-})
+    default: 0,
+  },
+});
 
 UserSchema.methods.createHash = async (plainTextPassword) => {
-    const saltRounds = 10
-    const salt = await bcrypt.genSalt(saltRounds)
-    return await bcrypt.hash(plainTextPassword, salt)
-}
+  const saltRounds = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
+  return await bcrypt.hash(plainTextPassword, salt);
+};
 
 UserSchema.methods.validatePassword = async (candidatePassword) => {
-    return await bcrypt.compare(candidatePassword, this.password_hash)
-}
+  return await bcrypt.compare(candidatePassword, this.password_hash);
+};
 
 const User = model("User", UserSchema);
-const Account = model("Account", AccountSchema)
+const Account = model("Account", AccountSchema);
 
-export {User, Account}
+export { User, Account };

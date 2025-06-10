@@ -1,17 +1,17 @@
 import express from "express";
-import { Account, User } from "../models/userModel";
 import JWT from "jsonwebtoken";
-const router = express.Router();
+import { Account, User } from "../models/userModel.js";
 import {
   signinSchema,
   signupSchema,
   updateSchema,
-} from "../schemas/userSchema";
-import { authMiddleware } from "../middlewares/authMiddleware";
+} from "../schemas/userSchema.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   const signupResult = signupSchema.safeParse(req.body);
-  if (signupResult.success) {
+  if (!signupResult.success) {
     res.status(400).json({
       message: `Validation failed`,
       error: signupResult.error.errors,
@@ -19,8 +19,10 @@ router.post("/signup", async (req, res) => {
   }
   const { username, firstname, lastname, password } = signupResult.data;
   try {
-    const existing = User.findOne(username);
-    existing && res.status(409).json({ msg: `Username already taken` });
+    const existing = await User.findOne({username});
+    if (existing) {
+      return res.status(409).json({ msg: `Username already taken` });
+    }
     const newUser = new User({
       username,
       firstname,
@@ -30,19 +32,34 @@ router.post("/signup", async (req, res) => {
     newUser.password_hash = hashedPassword;
     await newUser.save();
 
+    const account = await Account.create({
+      userId: newUser._id,
+      balance: Math.floor(1+ Math.random() * 10000),
+    });
+
+    const token = JWT.sign(
+      { userId: newUser._id, username: newUser.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1hr" }
+    );
+
     return res.status(201).json({
       msg: `User created successfully`,
+      token: token,
       user: {
         id: newUser._id,
         username: newUser.username,
-        firstname: newUser.password,
+        firstname: newUser.firstname,
         lastname: newUser.lastname,
       },
+      account: {
+        balance: account.balance
+      }
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      message: `Internal server error`,
+      message: `Internal server error: ${err.message}`,
     });
   }
 });
@@ -112,22 +129,27 @@ router.put("update-info", authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/bulk', async (req, res) => {
-    const filter = req.query.filter || ""
-    const users = await User.find({
-        $or: [{
-            firstname: {"$regex": filter}
-        }, {
-            lastname: {"$regex": filter}
-        }]
-    })
+router.get("/bulk", async (req, res) => {
+  const filter = req.query.filter || "";
+  const users = await User.find({
+    $or: [
+      {
+        firstname: { $regex: filter },
+      },
+      {
+        lastname: { $regex: filter },
+      },
+    ],
+  });
 
-    res.json({
-        user: users.map((u) => ({
-            id: u._id,
-            username: u.username,
-            firstname: u.firstname,
-            lastname: u.lastname,
-        }))
-    })
-})
+  res.json({
+    user: users.map((u) => ({
+      id: u._id,
+      username: u.username,
+      firstname: u.firstname,
+      lastname: u.lastname,
+    })),
+  });
+});
+
+export default router;
