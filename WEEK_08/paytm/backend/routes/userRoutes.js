@@ -17,7 +17,7 @@ router.post("/signup", async (req, res) => {
       error: signupResult.error.errors,
     });
   }
-  const { username, firstname, lastname, password } = signupResult.data;
+  const { username, firstname, lastname, password, email } = signupResult.data;
   try {
     const existing = await User.findOne({ username });
     if (existing) {
@@ -27,6 +27,7 @@ router.post("/signup", async (req, res) => {
       username,
       firstname,
       lastname,
+      email,
     });
     var hashedPassword = await newUser.createHash(password);
     newUser.password_hash = hashedPassword;
@@ -51,6 +52,7 @@ router.post("/signup", async (req, res) => {
         username: newUser.username,
         firstname: newUser.firstname,
         lastname: newUser.lastname,
+        email: newUser.email
       },
       account: {
         id: account._id,
@@ -102,7 +104,7 @@ router.post("/signin", async (req, res) => {
       account: {
         id: account._id,
         balance: account.balance,
-      }
+      },
     });
   } catch (err) {
     console.log(err);
@@ -132,15 +134,13 @@ router.put("/update-info", authMiddleware, async (req, res) => {
     password !== undefined &&
       (user.password_hash = await user.createHash(password));
     await user.save();
-    return res
-      .status(200)
-      .json({
-        msg: `User updated successfully!`,
-        username,
-        firstname,
-        lastname,
-        password: user.password_hash
-      });
+    return res.status(200).json({
+      msg: `User updated successfully!`,
+      username,
+      firstname,
+      lastname,
+      password: user.password_hash,
+    });
   } catch (err) {
     console.error(`Error updating user ${err}`);
     res.status(500).json({ msg: `Internal server error, ${err.message}` });

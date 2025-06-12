@@ -5,6 +5,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import userRouter from './routes/userRoutes.js'
 import accountRouter from './routes/accountRoutes.js'
+import authRouter from './routes/authRoutes.js'
 
 const app = express()
 app.use(cors())
@@ -19,8 +20,9 @@ const initialize = async () => {
     } catch (e) {
         console.error(`Error connected to database, ${e.message}`)
     } finally {
-        app.use('/user', userRouter)
-        app.use('/account', accountRouter)
+        app.use('/api/v1/user', userRouter)
+        app.use('/api/v1/account', accountRouter)
+        app.use('/api/v1/auth', authRouter)
 
         app.listen(PORT, () => {
             console.log(`Server running on port: ${PORT}`)

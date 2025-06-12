@@ -28,6 +28,10 @@ const UserSchema = new Schema({
     required: true,
     minLength: 6,
   },
+  email: {
+    type: String,
+    required: true,
+  }
 });
 
 const AccountSchema = new Schema({
