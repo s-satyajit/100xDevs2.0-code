@@ -31,7 +31,7 @@ const Signin = () => {
       );
       localStorage.setItem("token", response.data.token);
       console.log(response.data);
-      navigate("/dashboard");
+      navigate(`/dashboard`);
     } catch (err) {
       const message = err.response?.data?.message || err.message;
       console.error(message);

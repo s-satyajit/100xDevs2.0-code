@@ -9,10 +9,14 @@ export default function Users() {
 
   useEffect(() => {
     try {
-      axios
-        .get(`http://localhost:8080/api/v1/user/bulk?filter=${filter}`)
-        .then((response) => setUsers(response.data.user));
-      console.log(users);
+      const response = async () => {
+        const { data } = await axios.get(
+          `http://localhost:8080/api/v1/user/bulk?=${filter}`
+        );
+        setUsers(data.user);
+        console.log(users);
+      };
+      response();
     } catch (err) {
       console.error(err?.response?.message || err?.message);
     }
@@ -40,6 +44,19 @@ export default function Users() {
 const User = ({ user }) => {
   const navigate = useNavigate();
 
+  const handleSendMoney = (e) => {
+    const params = new URLSearchParams({
+      id: user.id,
+      firstname: user.firstname,
+    });
+
+    console.log(user._id);
+
+    const url = `/send?${params.toString()}`;
+    navigate(url);
+    console.log("Navigating to ", url);
+  };
+
   return (
     <div className="flex justify-between">
       <div className="flex">
@@ -53,7 +70,7 @@ const User = ({ user }) => {
         </div>
       </div>
       <div className="flex flelx-col justify-center h-full">
-        <Button label={"Send Money"} />
+        <Button label={"Send Money"} onClick={handleSendMoney} />
       </div>
     </div>
   );

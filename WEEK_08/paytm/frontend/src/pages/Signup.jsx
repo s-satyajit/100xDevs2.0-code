@@ -42,7 +42,7 @@ export default function Signup() {
       );
       localStorage.setItem("token", response.data.token);
       console.log(response.data);
-      navigate("/dashboard");
+      navigate(`/dashboard?username=${username}`);
     } catch (err) {
       const message = err.response?.data?.message || err.message;
       console.error(message);
