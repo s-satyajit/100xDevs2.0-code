@@ -4,3 +4,4 @@ dist
 *.ts.map
 *.d.ts.map
 *.d.ts
+node_modules
