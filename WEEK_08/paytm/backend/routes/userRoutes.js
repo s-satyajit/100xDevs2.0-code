@@ -81,7 +81,7 @@ router.post("/signin", async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) return res.status(400).json({ msg: `Invalid username` });
     const isMatch = await user.validatePassword(password);
-    if (!isMatch) return res.status(300).json({ msg: `Invalid password` });
+    if (!isMatch) return res.status(400).json({ msg: `Invalid password` });
 
     const account = await Account.findOne({
       userId: user._id,

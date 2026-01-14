@@ -10,11 +10,14 @@ import { useNavigate } from "react-router-dom";
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // console.log(password)
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(password)
 
     const payload = {
       username,
@@ -51,6 +54,7 @@ const Signin = () => {
               placeholder={"johndoe"}
             />
             <InputBox
+              type={"password"}
               label={"Password"}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={"******"}
