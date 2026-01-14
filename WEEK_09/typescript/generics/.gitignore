@@ -1,0 +1,8 @@
+dist
+*.js
+*.js.map
+*.js.ts.map
+*ts.map
+*.d.ts.map
+*.d.ts
+node_modules
